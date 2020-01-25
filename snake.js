@@ -25,101 +25,120 @@ const PLAY_AGAIN_TEXT_COLOR     = "Bisque";
 const STATE_PLAYING             = 0;
 const STATE_FINISHED            = 1;
 
-var Game = {
+var Game = 
+{
 	snake: { squares: [] },
 	dot: { position: {} },
 	frame: {},
 	audio: { }
 };
 
-function randomCoordinate() {
+function randomCoordinate()
+{
 	// First and last two rows (Nº 0 and Nº Game.rows-1) and columns (Nº 0 and Nº Game.columns-1) are used by frame.
 	// Another extra row (Nº 1) for info text.
 	// So they aren't availables.
 
-	return { row: Math.floor(Math.random() * (Game.rows - 3) + 2),
-		column: Math.floor(Math.random() * (Game.columns - 2) + 1) };
+	return {
+		row: Math.floor( Math.random() * ( Game.rows - 3 ) + 2 ),
+		column: Math.floor( Math.random() * ( Game.columns - 2 ) + 1 )
+	};
 }
 
-function rowToPixel(row) {
+function rowToPixel( row )
+{
 	return CELL_SIZE * row;
 }
 
-function columnToPixel(column) {
+function columnToPixel( column )
+{
 	return CELL_SIZE * column;
 }
 
-function fillBackground() {
+function fillBackground()
+{
 	Game.context.fillStyle = BACKGROUND_COLOR;
-	Game.context.fillRect(0, 0, Game.canvasWidth, Game.canvasHeight);
+	Game.context.fillRect( 0, 0, Game.canvasWidth, Game.canvasHeight );
 }
 
-function drawSnake(snake) {
+function drawSnake( snake )
+{
 	Game.context.fillStyle = SNAKE_COLOR;
 
-    for (var i = 0; i < snake.squares.length; i++) {
-		Game.context.fillRect(columnToPixel(snake.squares[i].column), rowToPixel(snake.squares[i].row),
-			CELL_SIZE, CELL_SIZE);
+    for ( var i = 0; i < snake.squares.length; i++ )
+	{
+		Game.context.fillRect( columnToPixel( snake.squares[i].column ), rowToPixel( snake.squares[i].row ),
+			CELL_SIZE, CELL_SIZE );
     }
 }
 
-function drawDot(dot) {
+function drawDot( dot )
+{
 	Game.context.fillStyle = DOT_COLOR;
-	Game.context.fillRect(columnToPixel(dot.position.column), rowToPixel(dot.position.row),
-		CELL_SIZE, CELL_SIZE);
+	Game.context.fillRect( columnToPixel( dot.position.column ), rowToPixel( dot.position.row ),
+		CELL_SIZE, CELL_SIZE );
 }
 
-function drawFrame() {
+function drawFrame()
+{
 	Game.context.beginPath();
 	Game.context.lineWidth = CELL_SIZE;
 	Game.context.strokeStyle = FRAME_COLOR;
-	Game.context.rect(CELL_SIZE / 2, CELL_SIZE + CELL_SIZE / 2, Game.canvasWidth - CELL_SIZE,
-		Game.canvasHeight - 2 * CELL_SIZE);
+	Game.context.rect( CELL_SIZE / 2, CELL_SIZE + CELL_SIZE / 2, Game.canvasWidth - CELL_SIZE,
+		Game.canvasHeight - 2 * CELL_SIZE );
 	Game.context.stroke();
 }
 
-function drawText() {
+function drawText()
+{
 	Game.context.textBaseline = 'top';
 	Game.context.font = TEXT_FONT;
 	Game.context.fillStyle = TEXT_COLOR;
-	Game.context.fillText('Score: ' + Game.score, 0, 0);
+	Game.context.fillText( 'Score: ' + Game.score, 0, 0 );
 	var musicStr = 'M: Music ON/OFF';
-	Game.context.fillText(musicStr, Game.canvasWidth / 4 - Game.context.measureText(musicStr).width / 2, 0);
+	Game.context.fillText( musicStr, Game.canvasWidth / 4 - Game.context.measureText( musicStr ).width / 2, 0 );
 	var livesStr = 'Lives: ' + Game.lives;
-	Game.context.fillText(livesStr, Game.canvasWidth - Game.context.measureText(livesStr).width, 0);
+	Game.context.fillText( livesStr, Game.canvasWidth - Game.context.measureText( livesStr ).width, 0 );
 
-	if (Game.score >= Game.highScore) {
+	if (Game.score >= Game.highScore)
+	{
 		Game.context.fillStyle = HIGH_TEXT_COLOR;
 	}
 
-	Game.context.fillText('HI: ' + Game.highScore, (Game.canvasWidth - Game.context.measureText(Game.highScore).width) / 2, 0);
+	Game.context.fillText( 'HI: ' + Game.highScore, ( Game.canvasWidth
+		- Game.context.measureText( Game.highScore ).width) / 2, 0 );
 
-	if (Game.state == STATE_FINISHED) {
+	if ( Game.state == STATE_FINISHED )
+	{
 		Game.context.fillStyle = PLAY_AGAIN_TEXT_COLOR;
-		Game.context.fillText(Game.startMessage, (Game.canvasWidth - Game.context.measureText(Game.startMessage).width) / 2,
-			(Game.canvasHeight - FONT_HEIGHT) / 2);
+		Game.context.fillText( Game.startMessage, ( Game.canvasWidth
+			- Game.context.measureText( Game.startMessage ).width) / 2, ( Game.canvasHeight - FONT_HEIGHT ) / 2 );
 	}
 }
 
-function draw() {
+function draw()
+{
 	fillBackground();
 	drawFrame();
 	drawText();
 
-	if (Game.state == STATE_PLAYING) {
-		drawSnake(Game.snake);
-		drawDot(Game.dot);
+	if ( Game.state == STATE_PLAYING )
+	{
+		drawSnake( Game.snake );
+		drawDot( Game.dot );
 	}
 }
 
-function initFrame(frame, canvasWidth, canvasHeight) {
+function initFrame( frame, canvasWidth, canvasHeight )
+{
 	frame.left = CELL_SIZE;
 	frame.top = 2 * CELL_SIZE;
 	frame.right = canvasWidth - CELL_SIZE;
 	frame.bottom = canvasHeight - CELL_SIZE;
 }
 
-function initSnake(snake, columns, rows) {
+function initSnake( snake, columns, rows )
+{
 	// Clear squares.
 	snake.squares.length = 0;
 	// Add head.
@@ -129,39 +148,47 @@ function initSnake(snake, columns, rows) {
 	Game.snake.hit = false;
 }
 
-function spawnDot() {
+function spawnDot()
+{
 	var position = randomCoordinate();
 	Game.dot.position.row = position.row;
 	Game.dot.position.column = position.column;
 }
 
-function startMusic() {
-	if (Game.playMusic && Game.audio.music.paused) {
+function startMusic()
+{
+	if ( Game.playMusic && Game.audio.music.paused ) {
 		Game.audio.music.loop = true;
 		Game.audio.music.volume = .2;
 		Game.audio.music.play();
 	}
 }
 
-function stopMusic() {
+function stopMusic()
+{
 	Game.audio.music.pause();
 	Game.audio.music.currentTime = 0;
 }
 
-function enableMusic(enable) {
+function enableMusic( enable )
+{
 	Game.playMusic = enable;
 
-	if (Game.playMusic) {
+	if ( Game.playMusic )
+	{
 		startMusic();
-	} else {
+	}
+	else
+	{
 		stopMusic();
 	}
 }
 
-function init() {
-	document.addEventListener("keydown", onKeyDown);
-	var c = document.getElementById("draw-surface");
-	Game.context = c.getContext("2d");
+function init()
+{
+	document.addEventListener( "keydown", onKeyDown );
+	var c = document.getElementById( "draw-surface" );
+	Game.context = c.getContext( "2d" );
 	Game.canvasWidth = c.offsetWidth;
 	Game.canvasHeight = c.offsetHeight;
 	Game.columns = Game.canvasWidth / CELL_SIZE;
@@ -173,114 +200,138 @@ function init() {
 	Game.score = 0;
 	Game.startMessage = 'PRESS ANY KEY TO PLAY';
 	Game.playMusic = true;
-	Game.audio.eat = new Audio('eat.mp3');
-	Game.audio.stroke = new Audio('stroke.mp3');
-	Game.audio.music = new Audio('music.mp3');
-	initFrame(Game.frame, Game.canvasWidth,	Game.canvasHeight);
-	initSnake(Game.snake, Game.columns, Game.rows);
+	Game.audio.eat = new Audio( 'eat.mp3' );
+	Game.audio.stroke = new Audio( 'stroke.mp3' );
+	Game.audio.music = new Audio( 'music.mp3' );
+	initFrame( Game.frame, Game.canvasWidth,	Game.canvasHeight );
+	initSnake( Game.snake, Game.columns, Game.rows );
 	spawnDot();
 	draw();
 	// Start game. Must be the last thing to do.
-	Game.intervalID = setInterval(update, UPDATE_MILLISECONDS);
+	Game.intervalID = setInterval( update, UPDATE_MILLISECONDS );
 }
 
-function restart() {
+function restart()
+{
 	Game.state = STATE_PLAYING;
 	Game.ugt = 0;
 	Game.lives = START_LIVES;
 	Game.score = 0;
 	Game.startMessage = 'PRESS ANY KEY TO PLAY AGAIN';
 	startMusic();
-	initSnake(Game.snake, Game.columns, Game.rows);
+	initSnake( Game.snake, Game.columns, Game.rows );
 	spawnDot();
 }
 
-function getHead(snake) {
+function getHead( snake )
+{
 	return snake.squares[0];
 }
 
-function getTail(snake) {
-	if (snake.squares.length > 0) {
+function getTail( snake )
+{
+	if ( snake.squares.length > 0 )
+	{
 		return snake.squares[snake.squares.length - 1];
 	}
 
 	return null;
 }
 
-function isCollision2(x1, y1, w1, h1, x2, y2, w2, h2) {
-	if (x1 + w1 < x2) {
+function isCollision2( x1, y1, w1, h1, x2, y2, w2, h2 )
+{
+	if ( x1 + w1 < x2 )
+	{
 		return false;
 	}
 
-	if (x1 >= x2 + w2) {
+	if ( x1 >= x2 + w2 )
+	{
 		return false;
 	}
 
-	if (y1 + h1 < y2) {
+	if ( y1 + h1 < y2 )
+	{
 		return false;
 	}
 
-	if (y1 >= y2 + h2) {
+	if ( y1 >= y2 + h2 )
+	{
 		return false;
 	}
 
-	if (x2 + w2 < x1) {
+	if ( x2 + w2 < x1 )
+	{
 		return false;
 	}
 
-	if (x2 >= x1 + w1) {
+	if ( x2 >= x1 + w1 )
+	{
 		return false;
 	}
 
-	if (y2 + h2 < y1) {
+	if ( y2 + h2 < y1 )
+	{
 		return false;
 	}
 
-	if (y2 >= y1 + h1) {
+	if ( y2 >= y1 + h1 )
+	{
 		return false;
 	}
 
 	return true;
 }
 
-function isCollision(p1, p2, size) {
-	return isCollision2(columnToPixel(p1.column), rowToPixel(p1.row), size, size,
-		columnToPixel(p2.column), rowToPixel(p2.row), size, size);
+function isCollision( p1, p2, size )
+{
+	return isCollision2( columnToPixel( p1.column ), rowToPixel( p1.row ), size, size, columnToPixel( p2.column ),
+		rowToPixel( p2.row ), size, size );
 }
 
-function isFrameCollision2(x, y) {
-	if (x < Game.frame.left) {
+function isFrameCollision2( x, y )
+{
+	if ( x < Game.frame.left )
+	{
 		return true;
 	}
 
-	if (y < Game.frame.top) {
+	if ( y < Game.frame.top )
+	{
 		return true;
 	}
 
-	if (x + CELL_SIZE > Game.frame.right) {
+	if ( x + CELL_SIZE > Game.frame.right )
+	{
 		return true;
 	}
 
-	if (y + CELL_SIZE > Game.frame.bottom) {
+	if ( y + CELL_SIZE > Game.frame.bottom )
+	{
 		return true;
 	}
 
 	return false;
 }
 
-function isFrameCollision(p) {
-	return isFrameCollision2(columnToPixel(p.column), rowToPixel(p.row));
+function isFrameCollision( p )
+{
+	return isFrameCollision2( columnToPixel( p.column ), rowToPixel( p.row ) );
 }
 
-function autoCollision(snake, head) {
-	for (var i = 0; i < snake.squares.length; i++) {
+function autoCollision( snake, head )
+{
+	for ( var i = 0; i < snake.squares.length; i++ )
+	{
 		var s = snake.squares[i];
 
-		if (s == head) {
+		if ( s == head )
+		{
 			continue;
 		}
 
-		if (isCollision(head, s, CELL_SIZE)) {
+		if ( isCollision( head, s, CELL_SIZE ) )
+		{
 			return true;
 		}
 	}
@@ -288,15 +339,20 @@ function autoCollision(snake, head) {
 	return false;
 }
 
-function updatePosition(snake, dx, dy) {
-	for (var i = snake.squares.length - 1; i >= 0; i--) {
+function updatePosition( snake, dx, dy )
+{
+	for ( var i = snake.squares.length - 1; i >= 0; i-- )
+	{
 		var current = snake.squares[i];
 
-		if (i > 0) {
+		if ( i > 0 )
+		{
 			var previous = snake.squares[i - 1];
 			current.row = previous.row;
 			current.column = previous.column;
-		} else {
+		}
+		else
+		{
 			// Here 'i' equals zero and 'current' is the head.
 			current.row += dy;
 			current.column += dx;
@@ -304,15 +360,18 @@ function updatePosition(snake, dx, dy) {
 	}
 }
 
-function addSquare(snake, dx, dy) {
-	var tail = getTail(snake);
-	snake.squares.push({row: tail.row - dy, column: tail.column - dx});
+function addSquare( snake, dx, dy )
+{
+	var tail = getTail( snake );
+	snake.squares.push( { row: tail.row - dy, column: tail.column - dx } );
 }
 
-function updateSnake(snake) {
+function updateSnake( snake )
+{
 	var dx = 0, dy = 0;
 
-	switch (snake.direction) {
+	switch ( snake.direction )
+	{
 		case WEST:
 			dx = -1;
 			break;
@@ -330,45 +389,58 @@ function updateSnake(snake) {
 			break;
 	}
 
-	updatePosition(snake, dx, dy);
+	updatePosition( snake, dx, dy );
 
-	var head = getHead(snake);
+	var head = getHead( snake );
 
-	snake.hit = isCollision(head, Game.dot.position	, CELL_SIZE);
+	snake.hit = isCollision( head, Game.dot.position, CELL_SIZE );
 
-	if (snake.hit) {
+	if ( snake.hit )
+	{
 		addSquare(snake, dx, dy);
-	} else {
+	}
+	else
+	{
 		// It's only necessary to check if the head collided.
-		snake.dead = isFrameCollision(head) || autoCollision(snake, head);
+		snake.dead = isFrameCollision( head ) || autoCollision( snake, head );
 	}
 }
 
-function update() {
+function update()
+{
 	Game.ugt += UPDATE_MILLISECONDS;
 
-	if (Game.ugt >= GAME_UPDATE_TIME) {
-		if (Game.state == STATE_PLAYING) {
-			updateSnake(Game.snake);
+	if ( Game.ugt >= GAME_UPDATE_TIME )
+	{
+		if ( Game.state == STATE_PLAYING )
+		{
+			updateSnake( Game.snake );
 
-			if (Game.snake.hit) {
+			if ( Game.snake.hit )
+			{
 				Game.audio.eat.play();
 				Game.score++;
 
-				if (Game.score > Game.highScore) {
+				if ( Game.score > Game.highScore )
+				{
 					Game.highScore = Game.score;
 				}
 
 				spawnDot();
-			} else if (Game.snake.dead) {
+			}
+			else if ( Game.snake.dead )
+			{
 				Game.audio.stroke.play();
 				Game.lives--;
 
-				if (Game.lives == 0) {
+				if ( Game.lives == 0 )
+				{
 					Game.state = STATE_FINISHED;
 					stopMusic();
-				} else {
-					initSnake(Game.snake, Game.columns, Game.rows);
+				}
+				else
+				{
+					initSnake( Game.snake, Game.columns, Game.rows );
 					spawnDot();
 				}
 			}
@@ -381,8 +453,9 @@ function update() {
 	draw();
 }
 
-function getOpposite(direction) {
-    switch (direction) {
+function getOpposite( direction )
+{
+    switch ( direction ) {
         case WEST: return EAST;
         case NORTH: return SOUTH;
         case EAST: return WEST;
@@ -390,37 +463,42 @@ function getOpposite(direction) {
     }
 }
 
-function checkDirection(snake, direction) {
+function checkDirection( snake, direction )
+{
 	// Can't go to the opposite current direction or the same current direction.
 
-	if (snake.direction != direction && direction != getOpposite(snake.direction)) {
+	if ( snake.direction != direction && direction != getOpposite( snake.direction ) )
+	{
 		snake.direction = direction;
 	}
 }
 
-function onKeyDown(e) {
-	if (!e.repeat) {
-		switch (Game.state) {
+function onKeyDown( e )
+{
+	if ( !e.repeat )
+	{
+		switch ( Game.state )
+		{
 			case STATE_PLAYING:
-				switch (e.code) {
+				switch ( e.code ) {
 					case LEFT_KEY_CODE:
-						checkDirection(Game.snake, WEST);
+						checkDirection( Game.snake, WEST );
 						break;
 
 					case UP_KEY_CODE:
-						checkDirection(Game.snake, NORTH);
+						checkDirection( Game.snake, NORTH );
 						break;
 
 					case RIGHT_KEY_CODE:
-						checkDirection(Game.snake, EAST);
+						checkDirection( Game.snake, EAST );
 						break;
 
 					case DOWN_KEY_CODE:
-						checkDirection(Game.snake, SOUTH);
+						checkDirection( Game.snake, SOUTH );
 						break;
 
 					case MUSIC_ON_OFF_KEY_CODE:
-						enableMusic(!Game.playMusic);
+						enableMusic( !Game.playMusic );
 						break;
 				}
 
@@ -433,11 +511,13 @@ function onKeyDown(e) {
 	}
 }
 
-function onLoad() {
+function onLoad()
+{
 	init();
 }
 
-function onUnload() {
-	clearInterval(Game.intervalID);
+function onUnload()
+{
+	clearInterval( Game.intervalID );
 }
 
